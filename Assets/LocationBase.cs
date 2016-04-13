@@ -236,7 +236,7 @@ public class LocationBase : MonoBehaviour
   #region TRADE
   [Header("Trading")]
   public bool AutomatedTrade = false;
-	void FakeTradeBetweenAdjacentLocations()
+  void FakeTradeBetweenAdjacentLocations()
   {
     #region FOOD_TRADE
     if (Resources[(int)RESOURCES.FOOD].Stockpile < Resources[(int)RESOURCES.FOOD].Demand
