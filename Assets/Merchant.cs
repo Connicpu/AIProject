@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Planning;
@@ -8,7 +9,9 @@ public class Merchant : MonoBehaviour
 {
     public PathNode CurrentGoal;
     private List<PathNode> _currentPath;
-    private List<PlanState> _currentPlan; 
+
+    private PlanState _currentAction;
+    private List<PlanState> _currentPlan;
 
     public LocationBase HomeCity;
     public float Wood;
@@ -16,29 +19,118 @@ public class Merchant : MonoBehaviour
 
     public void Update()
     {
+        CheckForPlan();
+        ExecutePlan();
+
         CheckForPath();
         WalkPath();
     }
 
     private void CheckForPlan()
     {
+        if (CurrentGoal != null)
+            return;
         if (_currentPlan != null)
             return;
+
+        var goal = new PlanGoal
+        {
+            Food = HomeCity.CurrentFood + 10,
+            Wood = HomeCity.CurrentWood + 10,
+        };
 
         var curState = new PlanState
         {
             Merchant = this,
-            Location = HomeCity
+            Location = HomeCity,
+            Goal = goal,
+            Food = HomeCity.CurrentFood,
+            Wood = HomeCity.CurrentWood,
+            Gold = HomeCity.CurrentMoney,
+            Action = PlanAction.Start,
         };
 
         var astar = new AStar<PlanState>();
+        var result = astar.RunToCompletion(curState, goal);
+        if (result == AStarResult.Failed)
+        {
+            if (FindClosestNode() != HomeCity.WalkNode)
+            {
+                CurrentGoal = HomeCity.WalkNode;
+            }
+            return;
+        }
 
+        _currentPlan = astar.TraverseFromGoal().Reverse().ToList();
+    }
+
+    private void ExecutePlan()
+    {
+        if (_currentPath != null)
+            return;
+
+        if (_currentAction == null)
+        {
+            if (_currentPlan == null)
+                return;
+            if (_currentPlan.Count == 0)
+            {
+                _currentPlan = null;
+                return;
+            }
+
+            _currentAction = _currentPlan[0];
+            _currentPlan.RemoveAt(0);
+            CurrentGoal = _currentAction.Location.WalkNode;
+        }
+        else
+        {
+            var them = _currentAction.Location;
+            float price;
+            switch (_currentAction.Action)
+            {
+                case PlanAction.Start:
+                    break;
+                case PlanAction.BuyWood:
+                    price = them.GetPrice(RESOURCES.WOOD) * 5;
+                    HomeCity.CurrentWood += 5;
+                    HomeCity.CurrentMoney -= price;
+                    them.CurrentWood -= 5;
+                    them.CurrentMoney += price;
+                    break;
+                case PlanAction.SellWood:
+                    price = them.GetPrice(RESOURCES.WOOD) * 5;
+                    HomeCity.CurrentWood -= 5;
+                    HomeCity.CurrentMoney += price;
+                    them.CurrentWood += 5;
+                    them.CurrentMoney -= price;
+                    break;
+                case PlanAction.BuyFood:
+                    price = them.GetPrice(RESOURCES.FOOD) * 5;
+                    HomeCity.CurrentFood += 5;
+                    HomeCity.CurrentMoney -= price;
+                    them.CurrentFood -= 5;
+                    them.CurrentMoney += price;
+                    break;
+                case PlanAction.SellFood:
+                    price = them.GetPrice(RESOURCES.FOOD) * 5;
+                    HomeCity.CurrentFood -= 5;
+                    HomeCity.CurrentMoney += price;
+                    them.CurrentFood += 5;
+                    them.CurrentMoney -= price;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            _currentAction = null;
+        }
     }
 
     private void CheckForPath()
     {
         if (_currentPath != null || CurrentGoal == null) return;
-        
+
         var myNode = FindClosestNode();
         _currentPath = myNode.NavigateTo(CurrentGoal);
 

@@ -9,6 +9,7 @@ namespace Planning
 {
     public enum PlanAction
     {
+        Start,
         BuyWood,
         SellWood,
         BuyFood,
@@ -49,10 +50,10 @@ namespace Planning
             var cheapestFood = locations.GetMin(loc => loc.GetPrice(RESOURCES.FOOD));
             var priciestFood = locations.GetMax(loc => loc.GetPrice(RESOURCES.FOOD));
 
-            var buyWoodCost = cheapestWood.GetPrice(RESOURCES.WOOD) * 10;
-            var buyFoodCost = cheapestFood.GetPrice(RESOURCES.FOOD) * 10;
-            var sellWoodCost = priciestWood.GetPrice(RESOURCES.WOOD) * 10;
-            var sellFoodCost = priciestFood.GetPrice(RESOURCES.FOOD) * 10;
+            var buyWoodCost = cheapestWood.GetPrice(RESOURCES.WOOD) * 5;
+            var buyFoodCost = cheapestFood.GetPrice(RESOURCES.FOOD) * 5;
+            var sellWoodCost = priciestWood.GetPrice(RESOURCES.WOOD) * 5;
+            var sellFoodCost = priciestFood.GetPrice(RESOURCES.FOOD) * 5;
 
             var woodSurp = Wood - Goal.Wood;
             var foodSurp = Food - Goal.Food;
@@ -80,7 +81,7 @@ namespace Planning
                         Location = priciestWood,
                         Goal = Goal,
                         Food = Food,
-                        Wood = Wood - 10,
+                        Wood = Wood - 5,
                         Gold = Gold + sellWoodCost,
                         Action = PlanAction.SellWood,
                     });
@@ -93,7 +94,7 @@ namespace Planning
                         Merchant = Merchant,
                         Location = priciestWood,
                         Goal = Goal,
-                        Food = Food - 10,
+                        Food = Food - 5,
                         Wood = Wood,
                         Gold = Gold + sellFoodCost,
                         Action = PlanAction.SellFood,
@@ -111,7 +112,7 @@ namespace Planning
                         Location = cheapestWood,
                         Goal = Goal,
                         Food = Food,
-                        Wood = Wood + 10,
+                        Wood = Wood + 5,
                         Gold = Gold - buyWoodCost,
                         Action = PlanAction.BuyWood,
                     });
@@ -125,7 +126,7 @@ namespace Planning
                         Merchant = Merchant,
                         Location = cheapestFood,
                         Goal = Goal,
-                        Food = Food + 10,
+                        Food = Food + 5,
                         Wood = Wood,
                         Gold = Gold - buyFoodCost,
                         Action = PlanAction.BuyFood,

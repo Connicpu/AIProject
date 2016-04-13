@@ -47,7 +47,7 @@ public class LocationBase : MonoBehaviour
     {
         new ResourceData(RESOURCES.FOOD, 50),
         new ResourceData(RESOURCES.WOOD, 50),
-        new ResourceData(RESOURCES.MONEY, 500)
+        new ResourceData(RESOURCES.MONEY, 2000)
     };
 
     [Header("General")]
@@ -94,8 +94,8 @@ public class LocationBase : MonoBehaviour
             {
                 float difference = Resources[(int)RESOURCES.FOOD].Stockpile - value;
                 Resources[(int)RESOURCES.FOOD].Value *= Mathf.Pow(Resources[(int)RESOURCES.FOOD].BuyAdjust, difference);
-        if (Resources[(int)RESOURCES.FOOD].Value > 271.96f)
-          Resources[(int)RESOURCES.FOOD].Value = 271.96f;
+                if (Resources[(int)RESOURCES.FOOD].Value > 271.96f)
+                    Resources[(int)RESOURCES.FOOD].Value = 271.96f;
             }
             else
             {
@@ -119,8 +119,8 @@ public class LocationBase : MonoBehaviour
             {
                 float difference = Resources[(int)RESOURCES.WOOD].Stockpile - value;
                 Resources[(int)RESOURCES.WOOD].Value *= Mathf.Pow(Resources[(int)RESOURCES.WOOD].BuyAdjust, difference);
-        if (Resources[(int)RESOURCES.WOOD].Value > 271.96f)
-          Resources[(int)RESOURCES.WOOD].Value = 271.96f;
+                if (Resources[(int)RESOURCES.WOOD].Value > 271.96f)
+                    Resources[(int)RESOURCES.WOOD].Value = 271.96f;
             }
             else {
                 float difference = value - Resources[(int)RESOURCES.WOOD].Stockpile;
@@ -143,8 +143,8 @@ public class LocationBase : MonoBehaviour
             {
                 float difference = Resources[(int)RESOURCES.MONEY].Stockpile - value;
                 Resources[(int)RESOURCES.MONEY].Value *= Mathf.Pow(Resources[(int)RESOURCES.MONEY].BuyAdjust, difference);
-        if (Resources[(int)RESOURCES.MONEY].Value > 271.96f)
-          Resources[(int)RESOURCES.MONEY].Value = 271.96f;
+                if (Resources[(int)RESOURCES.MONEY].Value > 271.96f)
+                    Resources[(int)RESOURCES.MONEY].Value = 271.96f;
             }
             else {
                 float difference = value - Resources[(int)RESOURCES.MONEY].Stockpile;
@@ -209,13 +209,14 @@ public class LocationBase : MonoBehaviour
     int CalculateHousesBuiltToday()
     {
         int housesBuilt = 0;
-        if (Mathf.Ceil(TodaysPopulationGrowth / PeoplePerHouse) * WoodRequiredToBuildHouse > Resources[(int)RESOURCES.WOOD].Stockpile) {
+        if (Mathf.Ceil(TodaysPopulationGrowth / PeoplePerHouse) * WoodRequiredToBuildHouse > Resources[(int)RESOURCES.WOOD].Stockpile)
         {
             housesBuilt = Mathf.FloorToInt(Resources[(int)RESOURCES.WOOD].Stockpile / WoodRequiredToBuildHouse);
             NumberOfHouses += housesBuilt;
             Resources[(int)RESOURCES.WOOD].Stockpile -= housesBuilt * WoodRequiredToBuildHouse;
         }
-        else {
+        else
+        {
             housesBuilt = Mathf.CeilToInt(TodaysPopulationGrowth / PeoplePerHouse);
             NumberOfHouses += housesBuilt;
             Resources[(int)RESOURCES.WOOD].Stockpile -= housesBuilt * WoodRequiredToBuildHouse;

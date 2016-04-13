@@ -11,7 +11,7 @@ public class CityLocation : LocationBase
         base.Start();
 
         //start with more money
-        CurrentMoney = 1000;
+        CurrentMoney = 4000;
     }
 
     protected override void Upkeep()
