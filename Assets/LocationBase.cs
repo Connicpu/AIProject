@@ -42,7 +42,7 @@ public class LocationBase : MonoBehaviour
 
     [Header("General")]
     public LocationBase[] AdjacentLocations;
-    float TimePerDay = 30f;
+    float TimePerDay = 10f;
     public ResourceData[] Resources =
     {
         new ResourceData(RESOURCES.FOOD, 50),

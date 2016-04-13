@@ -28,7 +28,7 @@ public class Merchant : MonoBehaviour
 
     private void CheckForPlan()
     {
-        if (CurrentGoal != null)
+        if (_currentPath != null)
             return;
         if (_currentPlan != null)
             return;
